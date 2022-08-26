@@ -2,6 +2,8 @@
 using Distributions, Random
 using Plots
 
+include("Bayesian_Analysis/Experiments_In_Julia/Helper_Functions.jl")
+
 # Consider a very simple model: We start with an initial number of cases, and each day the number changes by a factor of theta.
 # This is an applied math type model, where case counts are best thought of as the mean of some stochastic process.
 # We will then generate observed data from this model (integer-valued).
@@ -58,10 +60,16 @@ end
 
 # -------------- Compute the posterior at a grid of theta values ------------- #
 theta_seq = 1.5:0.01:2.5
-posterior_seq = posterior.(theta_seq, Ref(X_obs))
+posterior_seq = posterior.(theta_seq, Ref(data))
+prior_seq = prior.(theta_seq)
+
+# --------------- Rescale posterior to be compatible with prior -------------- #
+posterior_seq_rescaled = posterior_seq .* (mean(prior_seq) / mean(posterior_seq))
 
 # ---------------------------- Plot the posterior ---------------------------- #
-plot(theta_seq, posterior_seq)
+plot(theta_seq, prior_seq, label="Prior density for theta")
+plot!(theta_seq, posterior_seq_rescaled, label = "Posterior density for theta")
+vline!([theta_0], label="True value of theta")
 
 
 
@@ -69,39 +77,3 @@ plot(theta_seq, posterior_seq)
 
 
 
-
-
-
-
-# ---------------------------------------------------------------------------- #
-#                               Helper Functions                               #
-# ---------------------------------------------------------------------------- #
-"""
-Construct the mean number of cases for the given parameter values.
-"""
-function get_mean_trajectory(theta, X_1, t_max)
-    X = [X_1 * theta^(t-1) for t in 1:t_max]
-    return(X)
-end
-
-"""
-Compute the log likelihood given observed data and a vector of means
-"""
-function log_lik_from_means(X_means, X_obs)
-    all_dists = Poisson.(X_means)
-
-    all_log_liks = [logpdf(all_dists[i], X_obs[i]) for i in 1:t_max]
-
-    log_lik = sum(all_log_liks)
-    return log_lik
-end
-
-"""
-Compute the log likelihood given observed data and a value for theta.
-"""
-function log_lik_from_theta(theta, X_obs)
-    X_means = get_mean_trajectory(theta, X_1, t_max)
-    
-    log_lik = log_lik_from_means(X_means, X_obs)
-    return(log_lik)
-end
