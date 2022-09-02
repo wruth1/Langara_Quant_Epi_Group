@@ -1,0 +1,79 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry} 
+\usepackage{color}               		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÂ§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{amsmath}
+
+\usepackage{appendix}   % Start an appendices environment, then treat each separate appendix as an ordinary section
+
+\usepackage{authblk}
+
+\usepackage[semicolon]{natbib}
+\usepackage{verbatim}
+\usepackage{soul}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\def\UrlBreaks{\do\/\do-}
+
+\usepackage{tikz}	% For flow charts
+\usetikzlibrary{shapes, arrows}
+\tikzstyle{compartment} = [circle, minimum width=2cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\usepackage{multirow}
+
+\begin{document}
+
+Consider an $SIS$-type disease with two strains, call them $I$ and $J$. Assume also that we have a vaccine for this disease which is fully effective against strain $J$ and partially effective against strain $I$. If we include demography, the dynamics are as follows:
+%
+\begin{align}
+    S' &= \Lambda - \mu S - \tau_I S I - \tau_J S J + \chi \gamma_I I + \gamma_J J - \psi S \label{eq:S_prime}\\
+    V' &= \psi S - \mu V - \delta \tau_I V I + (1 - \chi) \gamma_I I \label{eq:V_prime}\\
+    I' &= \tau_I S I + \delta \tau_I V I - \mu I - \gamma_I I \label{eq:I_prime}\\
+    J' &= \tau_J S J - \mu J - \gamma_J J \label{eq:J_prime}
+\end{align}
+%
+Parameters are defined in Table \ref{tab:Parameters}.
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|}
+    \hline
+    $\Lambda$ & Birth rate\\
+    \hline
+    $\mu$ & Death rate\\
+    \hline
+    $\psi$ & Vaccination rate\\
+    \hline
+    $\tau_I$, $\tau_J$ & Infection rates\\
+    \hline
+    $\gamma_I$, $\gamma_J$ & Recovery rates\\
+    \hline
+    $\delta$ & Relative susceptibility of vaccinated individuals to infection with strain $I$\\
+    \hline
+    $\chi$ & Proportion of strain $I$ infections who recover to compartment $S$\footnotemark\\
+    \hline
+\end{tabular}
+\caption{Parameter definitions for our two-strain SIS model with vaccination and demography.}
+\label{tab:Parameters}
+\end{table}
+
+\footnotetext{The $\chi$ parameter can be thought of as the combined effect of what proportion of the population is vaccinated and what fraction of strain $I$ infections produce antibodies which are functionally equivalent to the vaccine.}
+
+The disease-free equilibrium can be computed in the usual way, giving $S_0 = \Lambda / (\mu + \psi)$ and $V_0 = \psi S_0 / \mu$. Note that the equilibrium population size is always $\Lambda / \mu =: N_*$ so, as we would expect, $S_0 + V_0 = N_*$. A local stability analysis gives the following two $\mathcal{R}_0$-type values: \hl{The values in the book assume $\Lambda = \mu$. Since I'm trying to avoid this assumption so I can see what role is played by the population size, I need to re-derive these quantities. Tldr: The following quantities are wrong and need to be re-derived.}
+%
+\begin{align*}
+    \mathcal{R}_0^I &= \frac{\tau_I (\mu + \delta \psi)}{(\mu + \gamma_I) (\mu + \psi)}\\
+    \mathcal{R}_0^J &= \frac{\tau_I (\mu + \delta \psi)}{(\mu + \gamma_J) (\mu + \psi)}    
+\end{align*}
+
+We are actually more interested in the endemic equilibria. To this end, we now assume that $I, J \neq 0$. This assumption allows us to cancel $I$ and $J$ in equations \ref{eq:I_prime} and \ref{eq:J_prime}. \hl{More to come.}
+
+\end{document}
