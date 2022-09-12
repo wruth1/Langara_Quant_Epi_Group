@@ -68,7 +68,7 @@ using Random
 
 Random.seed!(1)
 
-N = 20  # Number of time points at which we have data
+N = 20  # Number of observations to generate
 
 mu_ODE = 3  # Mean of ODE predictions
 
