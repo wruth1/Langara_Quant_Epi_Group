@@ -8,15 +8,18 @@ t0 = 0;
 tfinal = 3000;
 N0 = 1000; % initial population size in unit persons
 
-lambda = 0.01*N0;   % Birth per unit time
-tau_I = 0.005/N0;   % Infectivity of I ?
-tau_J = 0.0025/N0;  % Infectivity of J ?
+lambda = 0.01*N0;   % Birth/Immigration count per unit time
+tau_I = 0.005/N0;   % Infectivity of I <-- Jeremy thinks there shouldn't be a division by N0 here
+tau_J = 0.0025/N0;  % Infectivity of J
 gamma_I = 0.003;    % Recovered rate of I
 gamma_J = 0.0015;   % Recovered rate of J
-delta_S = 0.01;     % Proportion of death in S per unit time
-delta_I = delta_S;  % Proportion of death in I per unit time
-delta_J = delta_S;  % Proportion of death in J per unit time
-delta_B = delta_S;  % Proportion of death in B per unit time
+delta = 0.01;       % Disease-free
+% delta = 0.0055;     % Endemic Equilibrium
+% delta = 0.004;      % All Non-Zero - Need to change tfinal to see end behaviour
+delta_S = delta;    % Proportion of death in S per unit time
+delta_I = delta;    % Proportion of death in I per unit time
+delta_J = delta;    % Proportion of death in J per unit time
+delta_B = delta;    % Proportion of death in B per unit time
 
 y0 = N0 * [0.7; 0.2; 0.1; 0]; % initial conditions (proportions of S, I, J, B)
 
@@ -38,7 +41,7 @@ fprintf(['R0_J: ',num2str(baseR_J),'\n']);
 figure
 hold on
 plot(t,y,'lineWidth',2)
-%plot(t,N,'LineWidth',2)
+plot(t,N,'LineWidth',2)
 title('Disease-Free Equilibrium')
 xlabel('t')
 ylabel('Population')
