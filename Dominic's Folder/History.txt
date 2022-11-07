@@ -1,0 +1,59 @@
+==================== 20221107 ====================
+P.4, 698
+//...Due to strict immigration policies, we assume that there are no new immigrants with active TB.//
+Not sure if the policy changed or not, as far as I know, IRCC only requires immigrants to have 
+a valid medical check record, issued within 1 year, before the date of entry. Therefore, some immigrants 
+may land Canada with active TB, the model may need some modifications on this part.
+
+I have to apologize as I'm having 3 midterms in these two weeks, so I didn't spend so much time on the papers.
+
+What I did:  
+1. I basically read thru the whole paper, know what each section does. I didn't go thru the details of the proof 
+   of theorem in section 3.
+2. For the index, I didn’t go far from what James did, I fine tuned some of the definitions of varialbes, I marked
+   down the first appearance and where the details of the parameters,  I went thru every parameters mentioned in 
+   the paper, but most of them, I can’t figure out how the author came up with those figures. For example, the 
+   initial number of X E L T, it cited the 2011 census of Statistics Canada, however, there are many reports in that census.
+
+3. I think it’s good to have a glossary section, links for the references with bad links in the paper, and useful resources 
+   for future use
+   
+For the parameters, most of details of them are listed in page 9-10 of the pdf.
+ 
+π = 223840, average number of annual new immigrants to Canada, not specified, which years are taken into account 
+//About 250k each year for recent 10 years, except for 2021/22
+
+https://www150.statcan.gc.ca/n1/daily-quotidien/220928/dq220928c-eng.htm
+https://www.statista.com/statistics/443063/number-of-immigrants-in-canada/
+
+β 
+[2] http://dx.doi.org/10.1038/nm0895-815, Nature Medicine, subscription content
+[39] https://academic.oup.com/aje/article/153/4/381/129068 
+β = 7e−6 for a moderate epidemic (corresponding to seven new infections per infectious case per year), not mentioned how does it come as well in [39]
+
+dX estimate, never mentioned
+Natural removal rate = death rate? + leaving rate?
+death rate ~ 7-8/1000, i.e. 0.007-0.008
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310071001
+
+p = 5% high-risk LTBI immigrants develop TB within the first 2 years. 
+[2] http://dx.doi.org/10.1038/nm0895-815, Nature Medicine, subscription content
+[39] https://academic.oup.com/aje/article/153/4/381/129068 p = 0.05 (the probability of progressing to active tuberculosis during early LTBI without treatment)
+
+ν = 1% low-risk LTBI immigrants develop TB in the next 50 years. 
+[2] http://dx.doi.org/10.1038/nm0895-815, Nature Medicine, subscription content
+[39] https://academic.oup.com/aje/article/153/4/381/129068 v = 0.00256 
+corresponding to 5 percent probability of development of disease over 20 years during the long-term LTBI stage
+
+ω 0.40 all LTBI immigrants pass through latent stage in the first 2.5 years. 
+
+2001 Census of Canada 
+https://www12.statcan.gc.ca/english/census01/Products/standard/themes/DataProducts.cfm?S=1
+
+X_0 = 4431746 
+updates
+https://www150.statcan.gc.ca/n1/daily-quotidien/221026/dq221026a-eng.htm
+In 2021, more than 8.3 million people, or almost one-quarter (23.0%) of the population, were, or had ever been, a landed immigrant or permanent resident in Canada.
+E_0
+L_0
+T_0
