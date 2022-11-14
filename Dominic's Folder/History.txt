@@ -1,4 +1,28 @@
-==================== 20221107 ====================
+============================================= 20221114 ========================================================
+1. Check the limit of hours for the WOC program and plan it wisely.
+2. Write summaries for each section of the paper.
+3. Go through the paper again and go into the details of the algebra of the proof of the theorem.
+4. Add the q1 q2 assumption back to the spreadsheet.
+
+1. Planning of the Working hours
+Note that, working as a research assistant and peer tutor share the 100 hours of WOC.
+
+There are 7 more weeks to go from now to the end of the year.
+6 hours at home each week for the research. That’s 42 hours.
+
+In the mean time, about 18 (4hrs/week x 3 weeks, + 2hr/day x 3days during the exam period) hours working as peer tutor at MSAC.
+That’s total 60 hours charge from WOC.
+
+I can do more after the final exams, but let see how it goes
+
+2. Summaries of each section of the paper are written and uploaded as another txt file and a pdf file
+
+3. Done
+
+4. Done, please check the updated spreadsheet.
+
+
+============================================= 20221107 ========================================================
 P.4, 698
 //...Due to strict immigration policies, we assume that there are no new immigrants with active TB.//
 Not sure if the policy changed or not, as far as I know, IRCC only requires immigrants to have 
