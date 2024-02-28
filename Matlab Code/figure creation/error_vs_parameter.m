@@ -1,8 +1,8 @@
 %% load data
 
 % addpath('data and results')
-load('Experiment_Output.mat','Experiment_Output')
-load('Experiment_Parameters.mat');
+% load('Experiment_Output.mat','Experiment_Output')
+% load('Experiment_Parameters.mat');
 %%
 NumSims=size(Experiment_Output,1);
 

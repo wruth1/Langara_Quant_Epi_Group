@@ -2,6 +2,9 @@
 
 % load('Experiment_Output.mat')
 % load('Experiment_Parameters.mat');
+% load('')
+
+NAME = 'Run 2';
 %%
 
 
@@ -34,18 +37,20 @@ title('Distribution of optimal q1')
 
 subplot(2,3,2)
 histogram(allq2,numbins)
-% title('Distribution of optimal q2')
+title('Distribution of optimal q2')
 
 subplot(2,3,3)
 histogram(allE0,numbins)
-% title('Distribution of optimal E0')
+title('Distribution of optimal E0')
 
 subplot(2,3,4)
 histogram(allL0,numbins)
-% title('Distribution of optimal L0')
+title('Distribution of optimal L0')
 
 subplot(2,3,5)
-histogram(allR0,[1:2:max(allR0)])
+histogram(allR0,numbins)
 % histogram(allR0,numbins)
-% title('Distribution of optimal R0')
-saveas(gcf,'Optimized parameter distribution across sensitivity analysis.png')
+title('Distribution of optimal R0')
+saveas(gcf,['Optimized parameter distribution across sensitivity analysis ', NAME, '.png'])
+
+%% 

@@ -5,7 +5,7 @@ parameters / initial conditions.
 
 - 1st column is vector |BP|+|IC|, starting parameters in order [beta p w v a d n q1 q2, TP0, E0, L0, T0, R0]
 - 2nd column is vector in R5, optimal [q1 q2 E0 L0 R0]
-- 3rd column is hessian (output of fmincon)
+- 3rd column is cell with additional fmincon output: {exitflag, output, lambda, grad, hessian}
 - 4th column is matrix, population XELTR vs time (using optimized params)
 - 5th column is TB incidence (using optimized params)
 - 6th column is error of TB incidence using optimized params

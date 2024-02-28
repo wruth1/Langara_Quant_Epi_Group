@@ -35,13 +35,15 @@ q2 = 0.4;
 % 2010 Initial Condition from TB Surveilance by Stat Can
 TP0 = 6775765 - ReportedImmigration(1) ; % 6775765 2011 census  % https://en.wikipedia.org/wiki/Canada_immigration_statistics#2011_census
 T0 = 1054; % reported in 2010
-R0 = 0; 
+R0 = 10000; 
 % TP = total FB population
 
 % initial % of populations from Guo Wu
-E0 = 0.001735006* TP0;
-L0 = 0.21218547 * TP0; 
+% E0 = 0.001735006* TP0;
+% L0 = 0.21218547 * TP0; 
 
+E0 = TP0 * 0.005;
+L0 = TP0 * 0.30;
 
 
 
