@@ -61,7 +61,7 @@ function [XELTR, TBIncidence] = solveGuoWu3(bioParameters, initialConditions, Im
 
 
 %% %% Setup the ODE System
-function dydt = odefcn(t, y  )
+function dydt = odefcn(t, y  )f
 
     %pi = ImmigrationRate(t);
  

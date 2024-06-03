@@ -1,4 +1,4 @@
-function plotPopulationVsTime(t,Y, ReportedImmigration )
+function plotPopulationVsTime(t,Y )
 %{
   Input: 
     - bioParameters vector in R7, hard coded so position [beta p w v a d n q1 q2]
