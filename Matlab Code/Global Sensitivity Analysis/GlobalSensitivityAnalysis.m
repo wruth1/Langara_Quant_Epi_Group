@@ -1,11 +1,22 @@
 %% 
+load('pi_extrapolated.mat')
+load('qvec.mat')
+load('GOODPARAM.mat')
+
+
+bioParameters_start = GOODPARAM(1:8);
+bioParameters_start(8) = GOODOUTPUT(4);
+IC_start = GOODOUTPUT(5:9);
+
+Params_start = [bioParameters_start, IC_start];
+scale_dP = 10/100;
 
 %% Initialize data
 
 numExp = 100;
 
-numInput = 18;
-numOutput = 9;
+numInput = length(Params_start);
+numOutput = 2;
 
 
 % A and B are matrices of data
@@ -13,8 +24,8 @@ A = zeros(numExp, numInput);
 B = A;
 
 for k=1:numExp
-    A(k,:) = createBioparametersUniform();
-    B(k,:) = createBioparametersUniform();
+    A(k,:) = createRandomParameters(Params_start,scale_dP);
+    B(k,:) = createRandomParameters(Params_start,scale_dP);
 end
 
 %% load initial data
@@ -35,158 +46,36 @@ IC = [X0, E0, L0, T0, R0];
 % save outputs
 YA = zeros(numExp, numOutput);
 YB = YA;
-YA_other = cell(numExp,1);
-YB_other = cell(numExp,1);
+% YA_other = cell(numExp,1);
+% YB_other = cell(numExp,1);
 
 for i=1:numExp
     paramsi = A(i,:);
-
-
+    bioParameters = paramsi(1:8);
+    IC = paramsi(9:13);
+    [XELTR, TBIncidence_long, TBPrevalence_long] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec2);
+   
     
-    
-    BPi = paramsi(1:11);
-    ICi = paramsi(12:16);
+    YA(i,:) = [TBIncidence_long(end),TBPrevalence_long(end)];
 
-
-
-    TFP0 = sum(ICi);
-
-    % x_magnitude, the amount we will rescale by
-    x_m = [BPi(9) BPi(10) BPi(11) BPi(8), ICi];
-    
-
-    
-    % update initial conditions
-
-    % % find initial conditions R0, E0, L0, T0, R0. use steady state
-    ysteady = findSteadyState2(BPi, ICi, ReportedImmigration(1));
-    % rescale to correct total population.  
-    ysteady = ysteady*TFP0/sum(ysteady);
-    localIC = ysteady;
-
-    
-    allParamsi = [BPi localIC paramsi(17:18)];
-
-
-
-    
-    % set up fmincon input
-    x0 = x_m;
-
-    
-    numx=9;
-    Aineq = zeros(1,numx);
-    Aineq(1,1:3) = x_m(1:3); % q1+q2+q3 <= 100%
-    bineq(1) = 1 ;
-
-
-    Aeq = zeros(2,numx);
-    Aeq(1,end-4:end) = x_m(end-4:end); % total foreign-born population
-    
-    beq = [TFP0];
-
-    %T0 = 1081
-    Aeq(2,1:numx) = [0 0 0 0 0 0 0 x_m(8) 0];
-        prev_ampi = paramsi(17);
-
-    beq(2) = [1081.*prev_ampi];
-
-
- 
-    lb = zeros(1, numx); 
-    ub = lb + Inf;
-    
-    
-
-    f2=@(y)IncidenceError6_rescale(y,allParamsi, x_m, ReportedImmigration, ReportedIncidence);
-    y0 = x0./x_m; %q1 q2 q3
-
-    
-    [ymin2,fval2,exitflag,output,lambda,grad,hessian] = fmincon(f2, y0 , Aineq , bineq, Aeq, beq, lb, ub) ; % about 10 seconds to run
-
-    xmin2 = x_m.*ymin2;
-    
-    YA(i,:) = xmin2;
-YA_other{i} = {fval2,exitflag,output,lambda,grad,hessian};
 end
 
 % YB
 for i=1:numExp
     paramsi = B(i,:);
 
-
+    bioParameters = paramsi(1:8);
+    IC = paramsi(9:13);
+    [XELTR, TBIncidence_long, TBPrevalence_long] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec2);
+   
     
-    
-    BPi = paramsi(1:11);
-    ICi = paramsi(12:16);
-
-
-
-    TFP0 = sum(ICi);
-
-    % x_magnitude, the amount we will rescale by
-    x_m = [BPi(9) BPi(10) BPi(11) BPi(8), ICi];
-    
-
-    
-    % update initial conditions
-
-    % % find initial conditions R0, E0, L0, T0, R0. use steady state
-    ysteady = findSteadyState2(BPi, ICi, ReportedImmigration(1));
-    % rescale to correct total population.  
-    ysteady = ysteady*TFP0/sum(ysteady);
-    localIC = ysteady;
-
-    
-    allParamsi = [BPi localIC paramsi(17:18)];
-
-
-
-    
-    % set up fmincon input
-    x0 = x_m;
-
-    
-    numx=9;
-    Aineq = zeros(1,numx);
-    Aineq(1,1:3) = x_m(1:3); % q1+q2+q3 <= 100%
-    bineq(1) = 1 ;
-
-
-    Aeq = zeros(2,numx);
-    Aeq(1,end-4:end) = x_m(end-4:end); % total foreign-born population
-    
-    beq = [TFP0];
-
-    %T0 = 1081
-    Aeq(2,1:numx) = [0 0 0 0 0 0 0 x_m(8) 0];
-        prev_ampi = paramsi(17);
-
-    beq(2) = [1081.*prev_ampi];
-
-
- 
-    lb = zeros(1, numx); 
-    ub = lb + Inf;
-    
-    
-
-    f2=@(y)IncidenceError6_rescale(y,allParamsi, x_m, ReportedImmigration, ReportedIncidence);
-    y0 = x0./x_m; %q1 q2 q3
-
-    
-    [ymin2,fval2,exitflag,output,lambda,grad,hessian] = fmincon(f2, y0 , Aineq , bineq, Aeq, beq, lb, ub) ; % about 10 seconds to run
-
-    xmin2 = x_m.*ymin2;
-    
-    YB(i,:) = xmin2;
-    YB_other{i} = {fval2,exitflag,output,lambda,grad,hessian};
+    YB(i,:) = [TBIncidence_long(end),TBPrevalence_long(end)];
 
 end
 
 %% now compute YC
 YC = zeros(numExp, numOutput, numInput);
-YC_other = cell(numExp,numInput);
+% YC_other = cell(numExp,numInput);
 
 for j=1:numInput
     % C is B, but with jth column replaced by A
@@ -195,80 +84,20 @@ for j=1:numInput
 
     for i=1:numExp
         paramsi = C(i,:);
-    
-    
+
+        bioParameters = paramsi(1:8);
+        IC = paramsi(9:13);
+        [XELTR, TBIncidence_long, TBPrevalence_long] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec2);
+       
         
-        
-        BPi = paramsi(1:11);
-        ICi = paramsi(12:16);
-    
-    
-    
-        TFP0 = sum(ICi);
-    
-        % x_magnitude, the amount we will rescale by
-        x_m = [BPi(9) BPi(10) BPi(11) BPi(8), ICi];
-        
-    
-        
-        % update initial conditions
-    
-        % % find initial conditions R0, E0, L0, T0, R0. use steady state
-        ysteady = findSteadyState2(BPi, ICi, ReportedImmigration(1));
-        % rescale to correct total population.  
-        ysteady = ysteady*TFP0/sum(ysteady);
-        localIC = ysteady;
-    
-        
-        allParamsi = [BPi localIC paramsi(17:18)];
-    
-    
-    
-        
-        % set up fmincon input
-        x0 = x_m;
-    
-        
-        numx=9;
-        Aineq = zeros(1,numx);
-        Aineq(1,1:3) = x_m(1:3); % q1+q2+q3 <= 100%
-        bineq(1) = 1 ;
-    
-    
-        Aeq = zeros(2,numx);
-        Aeq(1,end-4:end) = x_m(end-4:end); % total foreign-born population
-        
-        beq = [TFP0];
-    
-        %T0 = 1081
-        Aeq(2,1:numx) = [0 0 0 0 0 0 0 x_m(8) 0];
-            prev_ampi = paramsi(17);
-    
-        beq(2) = [1081.*prev_ampi];
-    
-    
-     
-        lb = zeros(1, numx); 
-        ub = lb + Inf;
-        
-        
-    
-        f2=@(y)IncidenceError6_rescale(y,allParamsi, x_m, ReportedImmigration, ReportedIncidence);
-        y0 = x0./x_m; %q1 q2 q3
-    
-        
-        [ymin2,fval2,exitflag,output,lambda,grad,hessian] = fmincon(f2, y0 , Aineq , bineq, Aeq, beq, lb, ub) ; % about 10 seconds to run
-    
-        xmin2 = x_m.*ymin2;
-        
-        YC(i,:,j) = xmin2;
-        YC_other{i,j} = {fval2,exitflag,output,lambda,grad,hessian};
-    
+        YC(i,:,j) = [TBIncidence_long(end),TBPrevalence_long(end)];
+
+
     end
 end
 %% 
 save('SensitivityIndices.mat')
 
-save SensitivityIndices2.mat A B C YA YB YC YA_other YB_other YC_other;
+save SensitivityIndices2.mat A B C YA YB YC;
 %% 
 

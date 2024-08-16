@@ -1,12 +1,17 @@
-function ParamMesh = createUniformParameters(Params,scale_dP)
+function RandomParams = createRandomParameters(Params,scale_dP)
 %{
     input: 
     Params, in R^Nx1
 
     output: R^(Nx2) [Params *(1-scale_dP), Params*(1+scale_dP)]
 %}
-
-    RANGES = [Params *(1-scale_dP), Params*(1+scale_dP)];
+    
+    numParams = length(Params);
+    
+    Range = zeros(numParams,2);
+    
+    Range(:,1) = Params *(1-scale_dP);
+    Range(:,2) = Params*(1+scale_dP);
 
     %  % 1 beta = bioParameters(1); %TB infectivity
     % RANGES =  [0.00000001 * 0.9, 0.00000001 * 1.1; % beta
@@ -29,12 +34,12 @@ function ParamMesh = createUniformParameters(Params,scale_dP)
     % 8 8]; % power relapse
 
 
-    numparams = size(RANGES,1);
+    numparams = size(Range,1);
 
     randvec = rand(numparams,1);
 
 
-    ParamMesh = RANGES(:,1)+randvec.*(RANGES(:,2)-RANGES(:,1));
+    RandomParams = Range(:,1)+randvec.*(Range(:,2)-Range(:,1));
 
-    ParamMesh = ParamMesh';
+    RandomParams = RandomParams';
 end
