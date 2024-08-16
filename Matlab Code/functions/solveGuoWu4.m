@@ -19,8 +19,8 @@ Updated to include sigma, the reactivation rate of R to T
  w = bioParameters(3); % period of time new infectee considered E rather than L
  v = bioParameters(4); % rate people in L develop TB
  a = bioParameters(5); % TB death rate for people in T
- d = bioParameters(6); % non-TB death rate
- n = bioParameters(7); % recovery rate; delta in Guo-Wu
+ d = bioParameters(6); % recovery rate; delta in Guo-Wu
+ n = bioParameters(7); % non-TB death rate
  u = bioParameters(8); % percentage people in R develop active TB 
  q1 = bioParameters(9); % percent of immigrants into E
  q2 = bioParameters(10); % percent of immigrants into L

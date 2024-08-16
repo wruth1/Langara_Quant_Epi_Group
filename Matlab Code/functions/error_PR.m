@@ -11,8 +11,8 @@ function err = error_PR(XELTR, BP, power_relapse)
 
 
     % multiplying by 100 changes from decimal to percentages. 
-    % drives us to be within 0.9*NgRelapseFraction to 1.1*NgRelapseFraction
-    err_Relapse = (100*(proportionRelapse-NgRelapseFraction));
+    % drives us to be within 0.99*NgRelapseFraction to 1.01*NgRelapseFraction
+    err_Relapse = (100*(proportionRelapse-NgRelapseFraction)/NgRelapseFraction);
     % scalar
 
     % err = ((proportionRelapse-NgRelapseFraction)/NgRelapseFraction).^power_relapse;
