@@ -80,10 +80,11 @@ string_w = {'AFR','AMR', 'EMR','EUR','SEAR','WPR'};
 
 % Example data
 string_w = {'AFR', 'AMR', 'EMR', 'EUR', 'SEAR', 'WPR'};
-numbers=LTBI_w';
+string_w2 = {'AFR, LTBI prevalence=', 'AMR', 'EMR', 'EUR', 'SEAR', 'WPR'};
+numbers = LTBI_w'; % Assuming LTBI_w is a row vector
 
-% Combine string_w with the numbers using cellfun
-legend_labels = cellfun(@(s, n) [s ' ' num2str(n) '%'], string_w, num2cell(numbers*100), 'UniformOutput', false);
+% Combine string_w with ' LTBI prevalence ' and the numbers
+legend_labels = cellfun(@(s, n) [s ' LTBI prevalence ' num2str(n) '%'], string_w, num2cell(numbers), 'UniformOutput', false);
 
 
 % legend_labels = strcat(string_w, ' (', string(num2str(numbers(:))), ')');
