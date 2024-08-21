@@ -14,7 +14,7 @@ scale_dP = 1/100;
 %% load qvec
 
 load('piW_base.mat')
-qvec2_t = qvec_baseline;
+qvec2 = qvecW_base;
 
 %% Initialize data
 
@@ -105,11 +105,16 @@ for i=1:numInput
 
     end
 end
+
+
 %% 
 save('SensitivityIndices.mat')
 
 save SensitivityIndices2.mat A B C YA YB YC;
 %% 
+[S,ST,f0] = computeSensitivityIndices(YA,YB,YC);
+
+
   rowLabels = {'beta', 'p','w','v','a','d','n','sigma','X0','E0','L0','T0','R0'};
   columnLabels = {'Incidence','Prevalence'};
 

@@ -11,12 +11,12 @@ set(groot,'defaultLegendFontSize',22)
 
 % load data and variable names
 % load('XX3.mat')
-load('paramcell93.mat')
-load('XX93.mat')
-load('paramnames.mat')
-load('ReportedTB20062020.mat');
+% load('paramcell93.mat')
+% load('XX93.mat')
+% load('paramnames.mat')
+% load('ReportedTB20062020.mat');
 
-imageName = 'Run93';
+imageName = 'Run1';
 
 
 %% Extract parameter names
