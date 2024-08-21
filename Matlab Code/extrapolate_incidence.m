@@ -7,36 +7,66 @@ set(groot,'defaultLegendFontSize',32)
 
 
 addpath('functions\')
-addpath('figure creation\')
+% addpath('figure creation\')
 
 addpath('data and results\')
+addpath('Global Sensitivity Analysis\')
+
 
 %% extrapolate immigration
 
 
 
 load('MoreImmigration.mat')
-p = polyfit(Years20062022,ReportedImmigration20062022,1);
+regression_coeff = polyfit(Years20062022(1:end-3),ReportedImmigration20062022(1:end-3),1); %truncate 2020,2021,2022
 
 
 Years_long = 2006:2035;
 numt_long = length(Years_long);
-pi_extrapolated = zeros(1,numt_long);
+pi_linear = zeros(1,numt_long);
 
 for k=1:numt_long
-    pi_extrapolated(k) = p(1)*Years_long(k)+p(2);
+    pi_linear(k) = regression_coeff(1)*Years_long(k)+regression_coeff(2);
 end
 
+pi_extrapolated = zeros(numt_long,1);
+indexcounter = 0;
+for t=Years_long
+    indexcounter = indexcounter+1;
+    pi_extrapolated(indexcounter) = pi_extra(t);
+end
+
+%% plot 
 figure('units','normalized','outerposition',[0 0 1 1])
 
-plot(Years20062022,ReportedImmigration20062022)
+title('Immigration vs time')
 hold on
-plot(Years_long, pi_extrapolated)
+
+plot(Years_long, pi_linear,'ro--', 'DisplayName','linear')
+plot(Years_long,pi_extrapolated,'bSquare-','DisplayName','extrapolated')
+plot(Years20062022,ReportedImmigration20062022,'k--','DisplayName','reported','LineWidth',5)
+legend()
 saveas(gcf,['Extrapolated immigration rate.png'])
 
+hold off
+%%
+% pi_extrapolated = zeros(length(Years_long),1);
+% numdata = length(ReportedImmigration20062022);
+% pi_extrapolated(1:numdata) = ReportedImmigration20062022;
+% pi_extrapolated(numdata+1:end) = pi_linear(numdata+1:end);
+
+pi_extrapolated = zeros(numt_long,1);
+indexcounter = 0;
+for t=Years_long
+    indexcounter = indexcounter+1;
+    pi_extrapolated(indexcounter) = pi_extra(t);
+end
 
 
-save('pi_extrapolated.mat','pi_extrapolated');
+% pi_extrapolated = pi_extra()
+plot(Years_long,pi_extrapolated')
+
+save('pi_extrapolated.mat','pi_linear');
 
 
 load('qvec.mat')
@@ -54,12 +84,15 @@ bioParameters = GOODPARAM(1:8);
 bioParameters(8) = GOODOUTPUT(4);
 IC = GOODOUTPUT(5:9);
 
+Params = [bioParameters, IC];
+scale_dP = 10/100;
 
+% ParamMesh = createUniformParameters(Params,scale_dP);
 
 
 
 %% Estimate incidence in 2030
-[XELTR, TBIncidence_long, TBPrevalence_long] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec2);
+[XELTR, TBIncidence_long, TBPrevalence_long] = solveGuoWu4_extrapolate(bioParameters, IC, pi_linear,qvec2);
 
 % load incidence data to plot
 load('ReportedTB20062020.mat');

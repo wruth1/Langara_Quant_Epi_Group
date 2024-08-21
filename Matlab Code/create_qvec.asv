@@ -40,7 +40,7 @@ qvec_AMR = zeros(numt_long,numq);
 
 % load('pi_extrapolated.mat');
 % piW_SEA
-numw=6;
+
 
 Years_extra = Years_long(end-numt_extra+1:end);
 piW_extra_SEA = zeros(numt_extra,numw);
@@ -76,17 +76,13 @@ vecpi_baseline = PI_W/PI_total;
 piW_extra_base = zeros(numt_extra,numw);
 
 % total number of immigrants is whatever is extrapolated
-pi_extrapolated_extra = pi_extra(Years_extra);
+pi_extrapolated = pi_extra(Years_extra);
 % then distribution is always vecpi_baseline
 for i=1:numt_extra
-    piW_extra_base(i,:) = vecpi_baseline;
+    piW_extra_base
 end
 
-piW_base = [piW_20062020; piW_extra_base];
-qvecW_base = build_qvecW_t(piW_base,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
 
-
-% save('piW_base.mat','piW_base','qvecW_base','pi_extrapolated');
 %%
 % qvecW_SEA2 = build_qvecW_t(piW_extra_SEA,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
 % qvecW_SEA3 = build_qvecW_t(piW_extra_SEA,LTBI_w,INF_w,  qLqR_ratio  );
@@ -131,68 +127,34 @@ Houben_weight_experimental = (qLTBI_computed-Houben_mean)/(Houben_high-Houben_me
 
 
 %%
-pi_extrapolated = pi_extra(Years_long);
-[XELTR_SEA, TBIncidence_SEA, TBPrevalence_SEA] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_SEA);
+[XELTR, TBIncidence_SEA, TBPrevalence_SEA] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_SEA);
 % [XELTR, TBIncidence_SEA3, TBPrevalence_SEA3] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec3_SEA20062035);
-[XELTR_AMR, TBIncidence_AMR, TBPrevalence_AMR] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_AMR);
-[XELTR_base, TBIncidence_base, TBPrevalence_base] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_base);
+[XELTR, TBIncidence_AMR, TBPrevalence_AMR] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_AMR);
 %%
 % load incidence data to plot
 load('ReportedTB20062020.mat');
 
 
 figure('units','normalized','outerposition',[0 0 1 1])
-% subplot(2,2,1)
+subplot(2,1,1)
 title('Incidence vs time')
 
 hold on
-plot(Years_long, TBIncidence_SEA(1:end-1),'b:','DisplayName','SEA')
+plot(Years_long, TBIncidence_SEA(1:end-1),'b:')
 % plot(Years_long, TBIncidence_SEA3(1:end-1),'ro-')
 
-plot(Years_long, TBIncidence_AMR(1:end-1)','ro--','DisplayName','AMR')
-plot(Years_long, TBIncidence_base(1:end-1)','mx--','DisplayName','base')
-plot(Years,ReportedIncidence,'k--', 'LineWidth',5,'DisplayName','reported')
+plot(Years_long, TBIncidence_AMR(1:end-1)','ro-')
+plot(Years,ReportedIncidence,'k--', 'LineWidth',5)
 incidence_2015 = ReportedIncidence(find(Years==2015));
 %plot(Years_long,0.1*incidence_2015*ones(size(Years_long)))
 
-legend('Location','northwest')
-
-saveas(gcf,['Extrapolated incidence.png'])
-
-
-figure('units','normalized','outerposition',[0 0 1 1])
-
+legend('SEA','AMR','Reported','Location','NorthWest')
+subplot(2,1,2)
 title('Prevalence vs time')
 
 hold on
-plot(Years_long, TBPrevalence_SEA(1:end-1)','b:','DisplayName','SEA')
-plot(Years_long, TBPrevalence_AMR(1:end-1)','ro-','DisplayName','AMR')
-plot(Years_long, TBPrevalence_base(1:end-1)','mx--','DisplayName','base')
+plot(Years_long, TBPrevalence_SEA(1:end-1)','b:')
+plot(Years_long, TBPrevalence_AMR(1:end-1)','ro-')
+plot(Years,ReportedPrevalence,'k--', 'LineWidth',5)
 
-plot(Years,ReportedPrevalence,'k--', 'LineWidth',5,'DisplayName','reported')
-legend('Location','northwest')
-
-saveas(gcf,['Extrapolated prevalence.png'])
-
-
-figure('units','normalized','outerposition',[0 0 1 1])
-title(['LTBI prevalence, compared to Jordan''s estimate'])
-% subplot(2,2,3)
-load('Error_aj.mat');
-
-hold on 
-
-
-LTBI_SEA = compute_LTBI(XELTR_SEA)*100;
-LTBI_AMR = compute_LTBI(XELTR_AMR)*100;
-LTBI_base = compute_LTBI(XELTR_base)*100;
-plot(Years_long, LTBI_SEA(1:end-1),'b:','DisplayName','SEA')
-
-plot(Years_long, LTBI_AMR(1:end-1)','ro-','DisplayName','AMR')
-plot(Years_long, LTBI_base(1:end-1)','mx--','DisplayName','base')
-plot(years_aj,prevalence_aj,'k--', 'DisplayName','Jordan estimate','LineWidth',5)
-errorbar(years_aj, prevalence_aj, prevalence_aj-LL_aj, UL_aj-prevalence_aj,'DisplayName','95\% UI')
-
-legend('Location','northwest')
-saveas(gcf,['Extrapolated LTBI prevalence.png'])
-
+saveas(gcf,['Incidence Prevalence extrapolated.png'])

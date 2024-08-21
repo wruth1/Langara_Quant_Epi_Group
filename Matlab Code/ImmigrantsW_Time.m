@@ -51,6 +51,8 @@ for t=1:numt
     pi_w(6,t) = sum(pi_c(region6_indices,t));
 end
 
+save('pi_w20012020.mat','pi_w')
+
 %% load WHO region data 
 M2 = readtable("RegionHouben.csv");
 
@@ -88,7 +90,7 @@ legend_labels = cellfun(@(s, n) [s ' ' num2str(n) '%'], string_w, num2cell(numbe
 
 % legend_labels = strcat(string_w, ' (', string(num2str(numbers(:))), ')');
 
-% trace KEZIA clean up this figure too
+%% trace KEZIA clean up this figure too
 figure('units','normalized','outerposition',[0 0 1 1])
 plot(Immigration_years,pi_w)
 title('Number of migrants by WHO geographic region vs year')
