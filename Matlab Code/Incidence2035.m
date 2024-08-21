@@ -136,7 +136,7 @@ pi_extrapolated = pi_extra(Years_long);
 % [XELTR, TBIncidence_SEA3, TBPrevalence_SEA3] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec3_SEA20062035);
 [XELTR_AMR, TBIncidence_AMR, TBPrevalence_AMR] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_AMR);
 [XELTR_base, TBIncidence_base, TBPrevalence_base] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_base);
-%%
+%% plot incidence
 % load incidence data to plot
 load('ReportedTB20062020.mat');
 
@@ -153,13 +153,18 @@ plot(Years_long, TBIncidence_AMR(1:end-1)','ro--','DisplayName','AMR')
 plot(Years_long, TBIncidence_base(1:end-1)','mx--','DisplayName','base')
 plot(Years,ReportedIncidence,'k--', 'LineWidth',5,'DisplayName','reported')
 incidence_2015 = ReportedIncidence(find(Years==2015));
+
 %plot(Years_long,0.1*incidence_2015*ones(size(Years_long)))
 
 legend('Location','northwest')
 
 saveas(gcf,['Extrapolated incidence.png'])
 
-
+display(['The incidence in 2015 is ', num2str(incidence_2015)])
+display(['In 2035 assuming baseline is ', num2str(TBIncidence_base(end-1)),', a ', num2str(100*(incidence_2015/TBIncidence_base(end-1)-1)), '% reduction'])
+display(['In 2035 assuming SEA is ', num2str(TBIncidence_SEA(end-1)),', a ', num2str(100*(incidence_2015/TBIncidence_SEA(end-1)-1)), '% reduction'])
+display(['In 2035, assuming AMR is ', num2str(TBIncidence_AMR(end-1)),', a ', num2str(100*(incidence_2015/TBIncidence_AMR(end-1)-1)), '% reduction'])
+%% plot prevalence
 figure('units','normalized','outerposition',[0 0 1 1])
 
 title('Prevalence vs time')
@@ -174,7 +179,7 @@ legend('Location','northwest')
 
 saveas(gcf,['Extrapolated prevalence.png'])
 
-
+%%
 figure('units','normalized','outerposition',[0 0 1 1])
 title(['LTBI prevalence, compared to Jordan''s estimate'])
 % subplot(2,2,3)
@@ -191,7 +196,7 @@ plot(Years_long, LTBI_SEA(1:end-1),'b:','DisplayName','SEA')
 plot(Years_long, LTBI_AMR(1:end-1)','ro-','DisplayName','AMR')
 plot(Years_long, LTBI_base(1:end-1)','mx--','DisplayName','base')
 plot(years_aj,prevalence_aj,'k--', 'DisplayName','Jordan estimate','LineWidth',5)
-errorbar(years_aj, prevalence_aj, prevalence_aj-LL_aj, UL_aj-prevalence_aj,'DisplayName','95\% UI')
+errorbar(years_aj, prevalence_aj, prevalence_aj-LL_aj, UL_aj-prevalence_aj,'DisplayName','95% UI')
 
 legend('Location','northwest')
 saveas(gcf,['Extrapolated LTBI prevalence.png'])
