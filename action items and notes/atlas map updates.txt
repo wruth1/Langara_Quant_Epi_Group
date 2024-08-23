@@ -1,0 +1,6 @@
+
+(1) Figure 6 - Origin 2014
+
+  1) Figure 6, atlas map, i want for 2014
+  2) upload all data and .m to Github in a new folder in Matlab Code
+  3) write up how you make .gif. "Houben’s Global Burden of TB" , make new subsubsection after "6.3.1 Houben’s Global Burden of TB"

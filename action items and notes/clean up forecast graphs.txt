@@ -1,0 +1,15 @@
+clean up extrapolation graphs:  incidence, and immigration
+
+
+1) in extrapolate_incidence.m, clean up the plot for extrapolated incidence.
+
+Title
+xlabel
+ylabel
+legend
+different linestyles 
+legend, figure, 
+Two legend labels are 'Reported' immigration k-- linewidth 5; vs 'Extrapolated'
+
+
+2) in ImmigrationW_Time.m, clean up figure like #1
