@@ -23,7 +23,7 @@ qvec2_t = qvecW_base;
 
 %% Initialize data
 
-numExp = 500000;
+numExp = 5000;
 
 numInput = length(Params_start);
 numOutput = 2;
@@ -125,12 +125,7 @@ end
 %% 
 % save('SensitivityIndices.mat')
 
-save SensitivityIndices3.mat A B C_ba C_ab YA YB YC_ba YC_ab;
-% 
-% YA1 = YA;
-% YB1 = YB;
-% YC_ba1 = YC_ba;
-% YC_ab1 = YC_ab;
+% save SensitivityIndices2.mat A B C_ba YA YB YC_ab;
 %% 
 [S,ST,f0] = computeSensitivityIndices(YA,YB,YC_ab,YC_ba);
 
@@ -145,15 +140,4 @@ my_matrix2latex(ST, 'outST.tex', 'rowLabels', rowLabels, 'columnLabels', columnL
 
 %% see if S ST is stabilizing as numSims goes to infinity
 
-Sblock = zeros(numInput, numExp);
-STblock = Sblock;
-
-for s = 1:numExp % s for each sim
-    [Slocal, STlocal, f0local] = computeSensitivityIndices(YA(end-s+1:end,:),YB(end-s+1:end,:),YC_ab(end-s+1:end,:),YC_ba(end-s+1:end,:));
-    Sblock(:,s) = Slocal(:,1);
-    STblock(:,s) = STlocal(:,1);
-end
-%%
-figure
-start = 2500;
-plot(Sblock(4,start:end))
+Sli

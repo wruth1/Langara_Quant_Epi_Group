@@ -13,6 +13,18 @@ function RandomParams = createRandomParameters(Params,scale_dP)
     Range(:,1) = Params *(1-scale_dP);
     Range(:,2) = Params*(1+scale_dP);
 
+
+
+    numparams = size(Range,1);
+
+    randvec = rand(numparams,1);
+
+
+    RandomParams = Range(:,1)+randvec.*(Range(:,2)-Range(:,1));
+
+    RandomParams = RandomParams';
+end
+
     %  % 1 beta = bioParameters(1); %TB infectivity
     % RANGES =  [0.00000001 * 0.9, 0.00000001 * 1.1; % beta
     % 4/100/0.5, 10/100/0.5; % p
@@ -32,14 +44,3 @@ function RandomParams = createRandomParameters(Params,scale_dP)
     % 6.392498588396340e+05 6.392498588396340e+05; %R0
     % 1.1, 1+1/3; % prevalence amplification initial
     % 8 8]; % power relapse
-
-
-    numparams = size(Range,1);
-
-    randvec = rand(numparams,1);
-
-
-    RandomParams = Range(:,1)+randvec.*(Range(:,2)-Range(:,1));
-
-    RandomParams = RandomParams';
-end

@@ -1,0 +1,20 @@
+
+numInput = 8;
+numExp=size(YA,1);
+
+Sblock = zeros(numInput, numExp);
+STblock = Sblock;
+
+for s = 1:numExp % s for each sim
+    [Slocal, STlocal, f0local] = computeSensitivityIndices(YA(end-s+1:end,:),YB(end-s+1:end,:),YC_ab(end-s+1:end,:,:),YC_ba(end-s+1:end,:,:));
+    Sblock(:,s) = Slocal(:,1);
+    STblock(:,s) = STlocal(:,1);
+end
+%%
+figure
+start = 500;
+plot((1:numExp)(start:end),Sblock(4,start+1:end), 'DisplayName','v')
+hold on
+plot((1:numExp)(start:end),Sblock(2,start+1:end), 'DisplayName','p')
+legend
+

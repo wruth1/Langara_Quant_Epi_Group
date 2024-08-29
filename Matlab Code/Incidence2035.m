@@ -5,6 +5,13 @@
 %     TBI_c(c) = WHOincidence(WHOregion_c{c});
 % end
 
+
+addpath('functions\')
+addpath('figure creation\')
+
+addpath('data and results\')
+
+
 load('Reported_piCW_20012020.mat')
 
 
@@ -60,8 +67,14 @@ qLqR_ratio = 0.46;
 
 % Houben_weight= Houben_weight_experimental;
 
-qvecW_SEA = build_qvecW_t(piW_SEA,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
-qvecW_AMR = build_qvecW_t(piW_AMR,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
+% qvecW_SEA = build_qvecW_t(piW_SEA,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
+% qvecW_AMR = build_qvecW_t(piW_AMR,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
+
+DecayRate = 1/100;
+qvecW_SEA_decay = build_qvecW_t_decay(Years_long,piW_SEA,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio ,DecayRate );
+qvecW_AMR_decay = build_qvecW_t_decay(Years_long,piW_AMR,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio,DecayRate  );
+
+
 
 %%  build baseline
 
@@ -83,25 +96,13 @@ for i=1:numt_extra
 end
 
 piW_base = [piW_20062020; piW_extra_base];
-qvecW_base = build_qvecW_t(piW_base,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
+% qvecW_base = build_qvecW_t(piW_base,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
+qvecW_base_decay = build_qvecW_t_decay(Years_long,piW_base,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio ,DecayRate );
 
 
 % save('piW_base.mat','piW_base','qvecW_base','pi_extrapolated');
-%%
-% qvecW_SEA2 = build_qvecW_t(piW_extra_SEA,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
-% qvecW_SEA3 = build_qvecW_t(piW_extra_SEA,LTBI_w,INF_w,  qLqR_ratio  );
-% qvecW_AMR = build_qvecW_t(piW_extra_AMR,(1-Houben_weight)*LTBI_w+Houben_weight*LTBIhigh_w,INF_w,  qLqR_ratio  );
-% 
-% %
-% qvec_SEA20062035 = zeros(numt_long, numq);
-% qvec_SEA20062035(1:numt_short,:) = qvec_20062020;
-% qvec_SEA20062035(numt_short+1:end,:) = qvecW_SEA2;
-% qvec3_SEA20062035 = qvec_SEA20062035;
-% qvec3_SEA20062035(numt_short+1:end,:) = qvecW_SEA3;
-% 
-% qvec_AMR20062035 = zeros(numt_long, numq);
-% qvec_AMR20062035(1:numt_short,:) = qvec_20062020;
-% qvec_AMR20062035(numt_short+1:end,:) = qvecW_AMR;
+
+
 
 
 %% compute incidence in 2035
@@ -132,10 +133,11 @@ Houben_weight_experimental = (qLTBI_computed-Houben_mean)/(Houben_high-Houben_me
 
 %%
 pi_extrapolated = pi_extra(Years_long);
-[XELTR_SEA, TBIncidence_SEA, TBPrevalence_SEA] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_SEA);
-% [XELTR, TBIncidence_SEA3, TBPrevalence_SEA3] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvec3_SEA20062035);
-[XELTR_AMR, TBIncidence_AMR, TBPrevalence_AMR] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_AMR);
-[XELTR_base, TBIncidence_base, TBPrevalence_base] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_base);
+[XELTR_SEA, TBIncidence_SEA, TBPrevalence_SEA] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_SEA_decay);
+% [XELTR_SEA2, TBIncidence_SEA2, TBPrevalence_SEA_decay] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_SEA_decay);
+
+[XELTR_AMR, TBIncidence_AMR, TBPrevalence_AMR] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_AMR_decay);
+[XELTR_base, TBIncidence_base, TBPrevalence_base] = solveGuoWu4_extrapolate(bioParameters, IC, pi_extrapolated,qvecW_base_decay);
 %% plot incidence
 % load incidence data to plot
 load('ReportedTB20062020.mat');
@@ -147,7 +149,9 @@ title('Incidence vs time')
 
 hold on
 plot(Years_long, TBIncidence_SEA(1:end-1),'b:','DisplayName','SEA')
+% plot(Years_long, TBIncidence_SEA2(1:end-1),'k','DisplayName','SEA2')
 % plot(Years_long, TBIncidence_SEA3(1:end-1),'ro-')
+
 
 plot(Years_long, TBIncidence_AMR(1:end-1)','ro--','DisplayName','AMR')
 plot(Years_long, TBIncidence_base(1:end-1)','mx--','DisplayName','base')
@@ -171,6 +175,7 @@ title('Prevalence vs time')
 
 hold on
 plot(Years_long, TBPrevalence_SEA(1:end-1)','b:','DisplayName','SEA')
+% plot(Years_long, TBPrevalence_SEA_decay(1:end-1)','k','DisplayName','SEA2')
 plot(Years_long, TBPrevalence_AMR(1:end-1)','ro-','DisplayName','AMR')
 plot(Years_long, TBPrevalence_base(1:end-1)','mx--','DisplayName','base')
 
@@ -196,7 +201,7 @@ plot(Years_long, LTBI_SEA(1:end-1),'b:','DisplayName','SEA')
 plot(Years_long, LTBI_AMR(1:end-1)','ro-','DisplayName','AMR')
 plot(Years_long, LTBI_base(1:end-1)','mx--','DisplayName','base')
 plot(years_aj,prevalence_aj,'k--', 'DisplayName','Jordan estimate','LineWidth',5)
-errorbar(years_aj, prevalence_aj, prevalence_aj-LL_aj, UL_aj-prevalence_aj,'DisplayName','95% UI')
+% errorbar(years_aj, prevalence_aj, prevalence_aj-LL_aj, UL_aj-prevalence_aj,'DisplayName','95% UI')
 
 legend('Location','northwest')
 saveas(gcf,['Extrapolated LTBI prevalence.png'])

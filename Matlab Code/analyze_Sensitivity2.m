@@ -340,17 +340,60 @@ good_indices( find(allq1<Houbenq1_low) )=0;
 
 good_indices = find(good_indices);
 
+
+%% export data from good indices
+
+numgood = length(good_indices);
+
+numparams = length(XX{1,1});
+numoutput = length(XX{1,2});
+
+GOODPARAMS = zeros(numgood,numparams);
+GOODOUTPUT = zeros(numgood,numoutput);
+for k=1:numgood
+    GOODPARAMS(k,:) = XX{good_indices(k),1};
+    GOODOUTPUT(k,:) = XX{good_indices(k),2};
+end
+% save('GOODPARAMS.mat','GOODPARAMS','GOODOUTPUT')
+
+% compute prevalence amplification from 2011 onward
+
+prev_amplification = zeros(numgood,1);
+
+warmup_index = 5; % first 5 years are warmup
+
+for k=1:numgood 
+    prevalence_estimate = XX{good_indices(k),6};
+    
+
+
+    prev_amplification(k) = mean( prevalence_estimate(warmup_index+1:end-1)./ReportedPrevalence(warmup_index+1:end)' );
+end
+
+display(['with recovery rate d=',num2str(GOODPARAMS(1,6)), ' the amplification is ', mean(num2str(prev_amplification(1:2)))])
+display(['with recovery rate d=',num2str(GOODPARAMS(3,6)), ' the amplification is ', mean(num2str(prev_amplification(3:4)))])
+
+
 %% 
 
-validparams = zeros(length(good_indices),17);
+numparam = length(XX{1,1});
+validparams = zeros(length(good_indices),numparam);
+
+numx=length(XX{1,2});
+validoutputs = zeros(length(good_indices),numx);
+
 
 for k=1:length(good_indices)
-    currentparam = XX{k,1};
-
+    currentparam = XX{good_indices(k),1};
     validparams(k,:) = currentparam;
+
+    currentoutput = XX{good_indices(k),2};
+    validoutputs(k,:) = currentoutput;
 end
 colLabels = {'beta', 'p','w','v','a','d','n','sigma','qE','qL','qR','X0','E0','L0','T0','R0','prevamp','power relapse'};
 my_matrix2latex(validparams, 'validparams.tex',  'columnLabels',colLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny'); 
+colLabels = {'qE','qL','qR', '\sigma','X0','E0','L0','T0','R0'};
+my_matrix2latex(validoutputs, 'validoutputs.tex',  'columnLabels',colLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny'); 
 
 %% plot error vs experiment
 
@@ -789,7 +832,7 @@ xline(NgRelapseFraction, '--', {'Relapse %'}, 'LabelVerticalAlignment', 'top', '
 saveas(gcf,['Incidence Proportion New Immigrants ',imageName, '.png'])
 
 
-%% 
+
 
 
 

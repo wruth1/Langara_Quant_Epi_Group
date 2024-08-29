@@ -1,4 +1,4 @@
-function qvec_t = build_qvecW_t(piW_t,LTBIW, INFW, qLqR_ratio)
+function qvec_t = build_qvecW_t_decay(Years, piW_t,LTBIW, INFW, qLqR_ratio,DecayRate)
 %{
 INPUT:
     pi_t in R^numt
@@ -21,19 +21,21 @@ for t = 1:numt
 
     for w=1:numw
         
+        newLTBI_wt = LTBIW(w)*(1-DecayRate)^(Years(t)-2014);
+
         % solve Ax = b
         A = zeros(4);
         b = zeros(4,1);
     
         % E + L + R = 22.4% * pi_w(2014)
         A(1,:) = [0 1 1 1];
-        b(1) = LTBIW(w)*piW_t(t,w);
+        b(1) = newLTBI_wt * piW_t(t,w);
     
         % E/(X+E+L+R) = 1.31%
         % A(2,:) = [0 1 0 0 ] - [1 1 1 1]*INFW(w);
 
         % E/(E+L+R) = 1.31% / 22.4%
-        A(2,:) = [0 1 0 0 ] - [0 1 1 1]*INFW(w)/LTBIW(w);
+        A(2,:) = [0 1 0 0 ] - [0 1 1 1]*INFW(w)/newLTBI_wt;
         b(2) = 0;
   
         % L/R = 46%
