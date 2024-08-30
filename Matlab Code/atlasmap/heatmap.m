@@ -1,32 +1,36 @@
-%before running, import data.csv, import everything except the first row (exclude column titles)  
-    
-    userInput =input('Enter a year from 2001 to 2020:\n');
-    yearInterval = 6+(floor((userInput-2000)/5));
-    year = userInput-1991;
-    totalImmigrantsThatYear = data{1, year};
+%before running:
+%import data.csv to your matlab environment, import everything except the first row (exclude column titles)
+%save the countries.shp file to your device, edit the following line to the filepath for the file on your device
+    borders = shaperead('C:\Users\timl9\OneDrive\Documents\MATLAB\110m_cultural\ne_110m_admin_0_countries.shp', 'UseGeoCoords', true);
+
+    prevalence2014=(data{:, 4})./(data{:,5});
+    year =input('Enter a year from 2001 to 2020:\n');
+    yearInterval = 6+(floor((year-2001)/5));
+    yearColumn = userInput-1991;
+    totalImmigrantsThatYear = data{1, yearColumn};
+    prevalence=prevalenceThatYear(year, prevalence2014);
+
     worldmap('World');
     load coastlines;
     geoshow(coastlat, coastlon, 'DisplayType', 'line', 'Color', 'black');
     plabel('off');
     mlabel('off');
-    prevalencePercentage=(data{:, 4})./(data{:,5});
     for i=1:size(data,1)
         if (data{i,yearInterval}>0)
              propByCountry=(data{i, yearInterval}) / sum(data{:, yearInterval});
              immigrantsByCountry=propByCountry*totalImmigrantsThatYear;
-             prevalence_normalized = (prevalencePercentage(i)) / (max(prevalencePercentage));
+             % normalize with the the highest prevalence in 2000
+             prevalence_normalized = (prevalence(i)) / (max(prevalenceThatYear(2001, prevalence2014)));
              rgbValues = [1, 1-prevalence_normalized, 1-prevalence_normalized];
              plotm(data{i, 30}, data{i,31}, 'Marker', 'o', 'MarkerFaceColor', rgbValues, 'MarkerEdgeColor', 'black', 'MarkerSize',(0.2*sqrt(immigrantsByCountry)));
-              title(['Tuberculosis Prevalence in Origin Countries of Arriving Canadian Immigrants: ', sprintf('%d', userInput)],'FontSize', 14);
-     
+              title(['Tuberculosis Prevalence in Origin Countries of Arriving Canadian Immigrants: ', sprintf('%d', year)],'FontSize', 14);
+              
          
         end
     
     end
 
     %adding country borders
-    %save the shp file to your device and edit for your local path
-    borders = shaperead('C:\Users\timl9\OneDrive\Documents\MATLAB\110m_cultural\ne_110m_admin_0_countries.shp', 'UseGeoCoords', true);
     geoshow(borders, 'DisplayType', 'polygon', 'FaceColor', 'none', 'EdgeColor', 'black');
 
 
@@ -54,10 +58,11 @@ colormap(custom_colormap);
 
 % Set tick marks and labels on the colorbar
 colorbar_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1];
-colorbar_tick_labels = {'0', '12', '24', '36', '48', '60'};
+colorbar_tick_labels = {'0', '14', '28', '42', '56', '70'};
 colorbar('YTick', colorbar_ticks, 'YTickLabel', colorbar_tick_labels);
-
 annotation('textbox', [0.78, 0.1, 0.2, 0.05], 'String', 'LTBI Prevalence (%)', 'EdgeColor', 'none', 'HorizontalAlignment', 'center', 'FontSize', 10, 'FontWeight', 'bold');
 
-
-
+% returns the list of estimated country prevalences in a given year, accounting for decay
+function prevalence=prevalenceThatYear(year, prevalence2014)
+    prevalence = prevalence2014*(0.99)^(year-2014);
+end
