@@ -24,7 +24,7 @@
         totalImmigrantsThisYear = data{1, yearColumn};
     
         %extrapolate prevalences in this given year, accounting for decay
-        prevalenceThisYear=prevalence2014*(0.99)^(year-2014);
+        prevalenceThisYear=prevalence2014*(0.985)^(year-2014);
         
         % Initialize the world map
         figure('Visible', 'off', 'Position', [100, 100, figWidth, figHeight]); % Set the figure size
@@ -38,7 +38,7 @@
             if (data{i,yearInterval}>0)
                  propByCountry=(data{i, yearInterval}) / sum(data{:, yearInterval});
                  immigrantsByCountry=propByCountry*totalImmigrantsThisYear;
-                 prevalence_normalized = (prevalenceThisYear(i)) / (max(prevalence2014*(0.99)^(-13)));
+                 prevalence_normalized = (prevalenceThisYear(i)) / (max(prevalence2014*(0.985)^(-13)));
                  rgbValues = [1, 1-prevalence_normalized, 1-prevalence_normalized];
                  plotm(data{i, 30}, data{i,31}, 'Marker', 'o', 'MarkerFaceColor', rgbValues, 'MarkerEdgeColor', 'black', 'MarkerSize',(0.2*sqrt(immigrantsByCountry)));
                   title(['Tuberculosis Prevalence in Origin Countries of Arriving Canadian Immigrants: ', sprintf('%d', year)],'FontSize', 14);
