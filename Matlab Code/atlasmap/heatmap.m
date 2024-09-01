@@ -1,6 +1,6 @@
-%before running:
-%import data.csv to your matlab environment, import everything except the first row (exclude column titles)
-%save the countries.shp file to your device, edit the following line to the filepath for the file on your device
+    %before running:
+    %import data.csv to your matlab environment, import everything except the first row (exclude column titles)
+    %save the countries.shp file to your device, edit the following line to the filepath for the file on your device
     borders = shaperead('C:\Users\timl9\OneDrive\Documents\MATLAB\110m_cultural\ne_110m_admin_0_countries.shp', 'UseGeoCoords', true);
 
     prevalence2014=(data{:, 4})./(data{:,5});
@@ -64,5 +64,5 @@ annotation('textbox', [0.78, 0.1, 0.2, 0.05], 'String', 'LTBI Prevalence (%)', '
 
 % returns the list of estimated country prevalences in a given year, accounting for decay
 function prevalence=prevalenceThatYear(year, prevalence2014)
-    prevalence = prevalence2014*(0.99)^(year-2014);
+    prevalence = prevalence2014*(0.985)^(year-2014);
 end
